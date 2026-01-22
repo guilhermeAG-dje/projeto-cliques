@@ -1,0 +1,23 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+}
+
+.botoes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+button {
+    padding: 15px 25px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#resultado {
+    margin-top: 20px;
+    font-size: 18px;
+}

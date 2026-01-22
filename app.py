@@ -48,5 +48,4 @@ def view_logs():
     logs = c.fetchall()
     conn.close()
     
-    html = """
-    <!DOCTYPE html>
+

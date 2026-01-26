@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()">Trocar Tema</button>
     <div class="container">
         <h1 data-intro="Bem-vindo! Este é o sistema de Registo de Cliques.">Registo de Cliques</h1>
         <p class="subtitle">Selecione um botão para registar a sua interação no sistema.</p>
@@ -21,16 +22,16 @@
                 <li><strong>Clique:</strong> Escolha qualquer botão abaixo para registar um clique.</li>
                 <li><strong>Contagem:</strong> O sistema conta quantos cliques cada botão recebeu <em>hoje</em>.</li>
                 <li><strong>Reinício:</strong> A contagem volta a 1 automaticamente à meia-noite.</li>
-                <li><strong>Histórico:</strong> Use o link abaixo para ver todos os detalhes.</li>
+                <li><strong>Histórico:</strong> Use o link abaixo para ver todos os detalhes (data, hora e sequência).</li>
             </ul>
         </div>
 
-        <div class="botoes" data-intro="Clique nestes botões para registar a sua atividade.">
+        <div class="botoes" data-intro="Clique nestes botões para registar a sua atividade. Cada um tem o seu próprio contador diário.">
             <button onclick="registar('Botão 1')">Botão 1</button>
             <button onclick="registar('Botão 2')">Botão 2</button>
             <button onclick="registar('Botão 3')">Botão 3</button>
             <button onclick="registar('Botão 4')">Botão 4</button>
-            <button onclick="toggleTutorial()" class="btn-tutorial" data-intro="Manual/Tutorial">?</button>
+            <button onclick="toggleTutorial()" class="btn-tutorial" data-intro="Pode abrir o manual completo aqui a qualquer momento.">?</button>
         </div>
 
         <div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 20px;">
@@ -38,7 +39,7 @@
         </div>
 
         <div id="resultado-container" class="hidden">
-            <div id="resultado" data-intro="O resultado aparece aqui.">
+            <div id="resultado" data-intro="Quando clica, o resultado e a contagem sequencial aparecem aqui.">
                 <div class="stat-card">
                     <span id="stat-label-contador" class="label">Nº de Cliques</span>
                     <span id="stat-contador" class="value"></span>

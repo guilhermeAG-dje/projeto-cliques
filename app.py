@@ -5,6 +5,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 
+# Inicialização da Base de Dados
 def init_db():
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
@@ -48,8 +49,51 @@ def view_logs():
     c.execute("SELECT * FROM cliques ORDER BY id DESC")
     logs = c.fetchall()
     conn.close()
-    # (O HTML interno segue o padrão de cores dinâmicas)
-    return render_template_string(html_logs, logs=logs)
+    
+    html = """
+    <!DOCTYPE html>
+    <html lang="pt">
+    <head>
+        <meta charset="UTF-8">
+        <title>Logs da Base de Dados</title>
+        <style>
+            body { font-family: sans-serif; padding: 20px; background: #f8fafc; }
+            table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+            th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+            th { background: #4f46e5; color: white; }
+            tr:hover { background: #f1f5f9; }
+            .back { margin-bottom: 20px; display: inline-block; color: #4f46e5; text-decoration: none; font-weight: bold; }
+        </style>
+    </head>
+    <body>
+        <a href="/" class="back">← Voltar</a>
+        <h1>Registos de Cliques</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Botão</th>
+                    <th>Seq. (Dia)</th>
+                    <th>Data</th>
+                    <th>Hora</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log['id'] }}</td>
+                    <td>{{ log['botao'] }}</td>
+                    <td>{{ log['contador'] }}</td>
+                    <td>{{ log['data'] }}</td>
+                    <td>{{ log['hora'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+    </html>
+    """
+    return render_template_string(html, logs=logs)
 
 @app.route('/admin')
 def admin_page():
@@ -57,9 +101,28 @@ def admin_page():
 
 @app.route('/admin-export', methods=['POST'])
 def admin_export():
-    if request.json.get('password') != '123': return jsonify({'error': 'Erro'}), 403
-    # ... Lógica de exportação TXT ...
-    return send_file(mem, as_attachment=True, download_name='relatorio.txt', mimetype='text/plain')
+    password = request.json.get('password')
+    if password != '123':
+        return jsonify({'error': 'Acesso negado'}), 403
+    
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+    c.execute("SELECT * FROM cliques ORDER BY id DESC")
+    logs = c.fetchall()
+    conn.close()
+    
+    output = io.StringIO()
+    output.write("ID | Botão | Contador | Data | Hora\n")
+    output.write("-" * 50 + "\n")
+    for log in logs:
+        output.write(f"{log['id']} | {log['botao']} | {log['contador']} | {log['data']} | {log['hora']}\n")
+    
+    mem = io.BytesIO()
+    mem.write(output.getvalue().encode('utf-8'))
+    mem.seek(0)
+    
+    return send_file(mem, as_attachment=True, download_name='relatorio_cliques.txt', mimetype='text/plain')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

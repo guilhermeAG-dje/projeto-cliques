@@ -8,6 +8,54 @@
 .btn-tutorial {
     width: 48px;
     height: 48px;
+    border-radius: 50%;:root {
+    --primary: #d4af37; /* Dourado */
+    --primary-hover: #b8860b;
+    --bg: #121212;
+    --card-bg: #1e1e1e;
+    --text-main: #ffffff;
+    --text-muted: #a0a0a0;
+    --border: #333333;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    text-align: center;
+}
+
+h1 { color: var(--primary); }
+
+.btn-tutorial {
+    background-color: #333;
+    color: var(--primary);
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--primary);
+    margin: 0 auto 32px auto;
+}
+
+button {
+    background-color: var(--primary);
+    color: #000;
+    font-weight: 600;
+}
+/* ... restante dos estilos ... */
     /* ... */
 }

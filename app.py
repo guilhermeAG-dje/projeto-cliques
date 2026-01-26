@@ -104,14 +104,5 @@ def view_logs():
     """
     return render_template_string(html, logs=logs)
 
-@app.route('/code')
-def view_code():
-    with open('app.py', 'r') as f: app_code = f.read()
-    with open('static/script.js', 'r') as f: script_code = f.read()
-    with open('templates/index.html', 'r') as f: html_code = f.read()
-    with open('static/style.css', 'r') as f: css_code = f.read()
-    code_html = """...""" # Estrutura de visualização de código
-    return render_template_string(code_html, app_code=app_code, script_code=script_code, html_code=html_code, css_code=css_code)
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

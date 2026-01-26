@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, jsonify, render_template_string
 import sqlite3
 from datetime import datetime
+
 app = Flask(__name__)
-# Criar BD e tabela
+
 def init_db():
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
@@ -15,10 +16,13 @@ def init_db():
     )''')
     conn.commit()
     conn.close()
+
 init_db()
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
 @app.route('/click', methods=['POST'])
 def click():
     botao = request.json['botao']
@@ -27,18 +31,14 @@ def click():
     hora = agora.strftime('%H:%M')
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
-    # Conta cliques do mesmo botão no mesmo dia
     c.execute("SELECT COUNT(*) FROM cliques WHERE data = ? AND botao = ?", (data, botao))
     contador = c.fetchone()[0] + 1
     c.execute("INSERT INTO cliques (botao, contador, data, hora) VALUES (?, ?, ?, ?)",
               (botao, contador, data, hora))
     conn.commit()
     conn.close()
-    return jsonify({
-        'contador': contador,
-        'data': data,
-        'hora': hora
-    })
+    return jsonify({'contador': contador, 'data': data, 'hora': hora})
+
 @app.route('/logs')
 def view_logs():
     conn = sqlite3.connect('database.db')
@@ -47,5 +47,14 @@ def view_logs():
     c.execute("SELECT * FROM cliques ORDER BY id DESC")
     logs = c.fetchall()
     conn.close()
-    
+    html = """...""" # (Omitido aqui por brevidade, veja na página /code)
+    return render_template_string(html, logs=logs)
 
+@app.route('/code')
+def view_code():
+    # Rota que serve o código fonte completo
+    # ...
+    return render_template_string(code_html, ...)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)

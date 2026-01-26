@@ -5,7 +5,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# Inicialização da Base de Dados
+# Criar BD e tabela
 def init_db():
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
@@ -97,7 +97,20 @@ def view_logs():
 
 @app.route('/admin')
 def admin_page():
-    return render_template('admin.html')
+    # Carregar os códigos para exibir no admin.html
+    try:
+        with open('app.py', 'r') as f: app_code = f.read()
+        with open('static/style.css', 'r') as f: css_code = f.read()
+        with open('static/script.js', 'r') as f: js_code = f.read()
+        with open('templates/index.html', 'r') as f: html_code = f.read()
+    except:
+        app_code = css_code = js_code = html_code = "Erro ao carregar ficheiro."
+
+    return render_template('admin.html', 
+                         app_code=app_code, 
+                         css_code=css_code, 
+                         js_code=js_code, 
+                         html_code=html_code)
 
 @app.route('/admin-export', methods=['POST'])
 def admin_export():
@@ -122,7 +135,12 @@ def admin_export():
     mem.write(output.getvalue().encode('utf-8'))
     mem.seek(0)
     
-    return send_file(mem, as_attachment=True, download_name='relatorio_cliques.txt', mimetype='text/plain')
+    return send_file(
+        mem,
+        as_attachment=True,
+        download_name='relatorio_cliques.txt',
+        mimetype='text/plain'
+    )
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

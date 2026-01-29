@@ -5,54 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registo de Cliques</title>
     <link rel="stylesheet" href="/static/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">Trocar Tema</button>
+    <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
+        <span class="theme-icon">🌙</span>
+    </button>
     <div class="container">
-        <h1 data-intro="Bem-vindo! Este é o sistema de Registo de Cliques.">Registo de Cliques</h1>
-        <p class="subtitle">Selecione um botão para registar a sua interação no sistema.</p>
+        <h1 data-intro="👋 Bem-vindo! Aqui regista as suas atividades.">Registo de Cliques</h1>
+        <p class="subtitle">Selecione um botão para registar.</p>
 
         <div class="tutorial-card hidden" id="tutorial-section">
-            <h3>Como Funciona?</h3>
+            <h3>📖 Guia Rápido</h3>
             <ul>
-                <li><strong>Clique:</strong> Escolha qualquer botão abaixo para registar um clique.</li>
-                <li><strong>Contagem:</strong> O sistema conta quantos cliques cada botão recebeu <em>hoje</em>.</li>
-                <li><strong>Reinício:</strong> A contagem volta a 1 automaticamente à meia-noite.</li>
-                <li><strong>Histórico:</strong> Use o link abaixo para ver todos os detalhes (data, hora e sequência).</li>
+                <li><strong>Clique:</strong> Escolha um botão para contar.</li>
+                <li><strong>Contagem:</strong> Reinicia à meia-noite automaticamente.</li>
+                <li><strong>Atalhos:</strong> Ctrl + Q para ajuda.</li>
             </ul>
         </div>
 
-        <div class="botoes" data-intro="Clique nestes botões para registar a sua atividade. Cada um tem o seu próprio contador diário.">
-            <button onclick="registar('Botão 1')">Botão 1</button>
-            <button onclick="registar('Botão 2')">Botão 2</button>
-            <button onclick="registar('Botão 3')">Botão 3</button>
-            <button onclick="registar('Botão 4')">Botão 4</button>
-            <button onclick="toggleTutorial()" class="btn-tutorial" data-intro="Pode abrir o manual completo aqui a qualquer momento.">?</button>
+        <div class="botoes">
+            <button onclick="registar('btn1')">{{ names['btn1'] }}</button>
+            <button onclick="registar('btn2')">{{ names['btn2'] }}</button>
+            <button onclick="registar('btn3')">{{ names['btn3'] }}</button>
+            <button onclick="registar('btn4')">{{ names['btn4'] }}</button>
+            <button onclick="toggleTutorial()" class="btn-tutorial">?</button>
         </div>
 
-        <div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 20px;">
-            <a href="/logs" style="color: var(--primary); text-decoration: none; font-size: 14px; font-weight: 500;">Histórico →</a>
+        <div style="margin-top: 20px;">
+            <a href="javascript:void(0)" onclick="openLogsModal()" style="color: var(--primary); text-decoration: none;">Histórico →</a>
+        </div>
+
+        <!-- Modal de Histórico -->
+        <div id="logs-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Registos de Cliques</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="modal-theme-toggle" onclick="toggleTheme()">🌓</button>
+                        <button class="modal-help-btn" onclick="showModalHelp()">?</button>
+                        <span class="close-modal" onclick="closeLogsModal()">&times;</span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-help-content" class="modal-help-section hidden">
+                        <div class="help-card">
+                            <h4>📖 Guia do Histórico</h4>
+                            <p>Deslize para ver os cliques mais antigos. Use o ícone de tema para ajustar a luz.</p>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Botão</th><th>Seq.</th><th>Data</th><th>Hora</th></tr></thead>
+                            <tbody id="logs-modal-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="resultado-container" class="hidden">
-            <div id="resultado" data-intro="Quando clica, o resultado e a contagem sequencial aparecem aqui.">
+            <div id="resultado">
                 <div class="stat-card">
-                    <span id="stat-label-contador" class="label">Nº de Cliques</span>
+                    <span id="stat-label-contador" class="label">Cliques</span>
                     <span id="stat-contador" class="value"></span>
                 </div>
                 <div class="stat-card">
-                    <span class="label">Último Registo</span>
+                    <span class="label">Último</span>
                     <span id="stat-data" class="value"></span>
                     <span id="stat-hora" class="value small"></span>
                 </div>
             </div>
         </div>
     </div>
-
     <script src="https://unpkg.com/intro.js/intro.js"></script>
     <script src="/static/script.js"></script>
 </body>
